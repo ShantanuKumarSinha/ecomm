@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class RegisterUserForNotificationResponseDto {
-    private Notification notification;
-    private ResponseStatus responseStatus;
+  private Notification notification;
+  private ResponseStatus responseStatus;
 }

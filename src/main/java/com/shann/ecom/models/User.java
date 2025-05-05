@@ -3,9 +3,8 @@ package com.shann.ecom.models;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Data;
-
 import java.util.List;
+import lombok.Data;
 
 @Entity
 @Table(name ="ecom_user")

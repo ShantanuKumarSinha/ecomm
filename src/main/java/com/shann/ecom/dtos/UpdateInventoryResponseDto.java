@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class UpdateInventoryResponseDto {
-    private Inventory inventory;
-    private ResponseStatus responseStatus;
+  private Inventory inventory;
+  private ResponseStatus responseStatus;
 }

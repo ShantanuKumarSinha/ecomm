@@ -14,10 +14,9 @@ import com.shann.ecom.repositories.NotificationRepository;
 import com.shann.ecom.repositories.ProductRepository;
 import com.shann.ecom.repositories.UserRepository;
 import com.shann.ecom.services.InventoryService;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {

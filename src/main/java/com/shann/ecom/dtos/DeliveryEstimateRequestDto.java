@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class DeliveryEstimateRequestDto {
-    private int productId;
-    private int addressId;
+  private int productId;
+  private int addressId;
 }

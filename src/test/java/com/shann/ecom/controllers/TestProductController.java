@@ -1,11 +1,17 @@
 package com.shann.ecom.controllers;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.shann.ecom.dtos.DeliveryEstimateRequestDto;
 import com.shann.ecom.dtos.DeliveryEstimateResponseDto;
 import com.shann.ecom.dtos.ResponseStatus;
 import com.shann.ecom.models.*;
 import com.shann.ecom.repositories.*;
 import com.shann.ecom.services.ProductService;
+import java.lang.reflect.Field;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,13 +19,6 @@ import org.reflections.Reflections;
 import org.reflections.scanners.SubTypesScanner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.lang.reflect.Field;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class TestProductController {

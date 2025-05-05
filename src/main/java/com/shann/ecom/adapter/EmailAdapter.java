@@ -1,8 +1,8 @@
 package com.shann.ecom.adapter;
 
+import com.shann.ecom.libraries.Sendgrid;
 import org.springframework.stereotype.Component;
 
-import com.shann.ecom.libraries.Sendgrid;
 @Component
 public class EmailAdapter implements MailAdapter {
 

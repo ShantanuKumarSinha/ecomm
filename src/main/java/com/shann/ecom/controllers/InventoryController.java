@@ -14,49 +14,56 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/inventories")
 public class InventoryController {
 
-    private InventoryService inventoryService;
+  private InventoryService inventoryService;
 
-    @Autowired
-    public InventoryController(InventoryService inventoryService) {
-        this.inventoryService = inventoryService;
+  @Autowired
+  public InventoryController(InventoryService inventoryService) {
+    this.inventoryService = inventoryService;
+  }
+
+  @PostMapping("")
+  public CreateOrUpdateResponseDto createOrUpdateInventory(
+      @RequestBody CreateOrUpdateRequestDto requestDto) {
+    var createOrUpdateResponseDto = new CreateOrUpdateResponseDto();
+    try {
+      var inventory =
+          inventoryService.createOrUpdateInventory(
+              requestDto.getUserId(), requestDto.getProductId(), requestDto.getQuantity());
+      createOrUpdateResponseDto.setInventory(inventory);
+      createOrUpdateResponseDto.setResponseStatus(ResponseStatus.SUCCESS);
+    } catch (UserNotFoundException
+        | UnAuthorizedAccessException
+        | ProductNotFoundException exception) {
+      createOrUpdateResponseDto.setResponseStatus(ResponseStatus.FAILURE);
     }
+    return createOrUpdateResponseDto;
+  }
 
-    @PostMapping("")
-    public CreateOrUpdateResponseDto createOrUpdateInventory(@RequestBody CreateOrUpdateRequestDto requestDto){
-        var createOrUpdateResponseDto = new CreateOrUpdateResponseDto();
-        try{
-            var inventory =  inventoryService.createOrUpdateInventory(requestDto.getUserId(), requestDto.getProductId(),requestDto.getQuantity());
-            createOrUpdateResponseDto.setInventory(inventory);
-            createOrUpdateResponseDto.setResponseStatus(ResponseStatus.SUCCESS);
-        } catch(UserNotFoundException | UnAuthorizedAccessException | ProductNotFoundException exception){
-            createOrUpdateResponseDto.setResponseStatus(ResponseStatus.FAILURE);
-        }
-        return createOrUpdateResponseDto;
+  @DeleteMapping("")
+  public DeleteInventoryResponseDto deleteInventory(
+      @RequestBody DeleteInventoryRequestDto requestDto) {
+    var deleteInventoryResponseDto = new DeleteInventoryResponseDto();
+    try {
+      inventoryService.deleteInventory(requestDto.getUserId(), requestDto.getProductId());
+      deleteInventoryResponseDto.setResponseStatus(ResponseStatus.SUCCESS);
+    } catch (UserNotFoundException | UnAuthorizedAccessException exception) {
+      deleteInventoryResponseDto.setResponseStatus(ResponseStatus.FAILURE);
     }
+    return deleteInventoryResponseDto;
+  }
 
-    @DeleteMapping("")
-    public DeleteInventoryResponseDto deleteInventory(@RequestBody DeleteInventoryRequestDto requestDto){
-        var deleteInventoryResponseDto = new DeleteInventoryResponseDto();
-        try{
-            inventoryService.deleteInventory(requestDto.getUserId(),requestDto.getProductId());
-            deleteInventoryResponseDto.setResponseStatus(ResponseStatus.SUCCESS);
-        }catch(UserNotFoundException | UnAuthorizedAccessException exception){
-            deleteInventoryResponseDto.setResponseStatus(ResponseStatus.FAILURE);
-        }
-        return deleteInventoryResponseDto;
+  @PutMapping("")
+  public UpdateInventoryResponseDto updateInventory(UpdateInventoryRequestDto requestDto) {
+    UpdateInventoryResponseDto responseDto = new UpdateInventoryResponseDto();
+    try {
+      Inventory inventory =
+          inventoryService.updateInventory(requestDto.getProductId(), requestDto.getQuantity());
+      responseDto.setInventory(inventory);
+      responseDto.setResponseStatus(ResponseStatus.SUCCESS);
+      return responseDto;
+    } catch (Exception e) {
+      responseDto.setResponseStatus(ResponseStatus.FAILURE);
+      return responseDto;
     }
-
-
-    public UpdateInventoryResponseDto updateInventory(UpdateInventoryRequestDto requestDto) {
-        UpdateInventoryResponseDto responseDto = new UpdateInventoryResponseDto();
-        try{
-            Inventory inventory = inventoryService.updateInventory(requestDto.getProductId(), requestDto.getQuantity());
-            responseDto.setInventory(inventory);
-            responseDto.setResponseStatus(ResponseStatus.SUCCESS);
-            return responseDto;
-        } catch (Exception e){
-            responseDto.setResponseStatus(ResponseStatus.FAILURE);
-            return responseDto;
-        }
-    }
+  }
 }

@@ -1,17 +1,14 @@
 package com.shann.ecom.repositories;
 
+import com.shann.ecom.models.Inventory;
+import com.shann.ecom.models.Product;
+import jakarta.persistence.LockModeType;
 import java.util.Optional;
-
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
-import com.shann.ecom.models.Inventory;
-import com.shann.ecom.models.Product;
-
-import jakarta.persistence.LockModeType;
 
 @Repository
 public interface InventoryRepository extends JpaRepository<Inventory, Integer>  {

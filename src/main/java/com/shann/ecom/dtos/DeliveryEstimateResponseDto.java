@@ -1,8 +1,7 @@
 package com.shann.ecom.dtos;
 
-import lombok.Data;
-
 import java.util.Date;
+import lombok.Data;
 
 @Data
 public class DeliveryEstimateResponseDto {

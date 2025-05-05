@@ -5,6 +5,6 @@ import lombok.Data;
 
 @Data
 public class CancelOrderResponseDto {
-    private ResponseStatus status;
-    private Order order;
+  private ResponseStatus status;
+  private Order order;
 }

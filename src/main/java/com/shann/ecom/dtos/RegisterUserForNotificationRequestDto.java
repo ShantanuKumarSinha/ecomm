@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class RegisterUserForNotificationRequestDto {
-    private int userId;
-    private int productId;
+  private int userId;
+  private int productId;
 }

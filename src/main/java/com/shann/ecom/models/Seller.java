@@ -7,10 +7,11 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Seller extends BaseModel{
-    private String name;
-    private String email;
-    @OneToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
-    private Address address;
+public class Seller extends BaseModel {
+  private String name;
+  private String email;
+
+  @OneToOne
+  @JoinColumn(name = "address_id", referencedColumnName = "id")
+  private Address address;
 }

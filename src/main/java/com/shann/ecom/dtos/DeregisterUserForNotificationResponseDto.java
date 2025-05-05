@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class DeregisterUserForNotificationResponseDto {
-    private ResponseStatus responseStatus;
+  private ResponseStatus responseStatus;
 }

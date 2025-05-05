@@ -7,9 +7,10 @@ import lombok.Data;
 
 @Entity
 @Data
-public class DeliveryHub extends BaseModel{
-    @OneToOne
-    @JoinColumn(name="address_id", referencedColumnName = "id")
-    private Address address;
-    private String name;
+public class DeliveryHub extends BaseModel {
+  @OneToOne
+  @JoinColumn(name = "address_id", referencedColumnName = "id")
+  private Address address;
+
+  private String name;
 }

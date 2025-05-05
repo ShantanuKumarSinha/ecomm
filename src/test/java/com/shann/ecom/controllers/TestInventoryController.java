@@ -1,5 +1,7 @@
 package com.shann.ecom.controllers;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.shann.ecom.dtos.*;
 import com.shann.ecom.models.Product;
 import com.shann.ecom.models.User;
@@ -7,15 +9,12 @@ import com.shann.ecom.models.UserType;
 import com.shann.ecom.repositories.InventoryRepository;
 import com.shann.ecom.repositories.ProductRepository;
 import com.shann.ecom.repositories.UserRepository;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class TestInventoryController {

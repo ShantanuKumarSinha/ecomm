@@ -5,7 +5,9 @@ import com.shann.ecom.models.Notification;
 
 public interface NotificationService {
 
-    public Notification registerUser(int userId, int productId) throws UserNotFoundException, ProductNotFoundException, ProductInStockException;
+  public Notification registerUser(int userId, int productId)
+      throws UserNotFoundException, ProductNotFoundException, ProductInStockException;
 
-    public void deregisterUser(int userId, int notificationId) throws UserNotFoundException, NotificationNotFoundException, UnAuthorizedException;
+  public void deregisterUser(int userId, int notificationId)
+      throws UserNotFoundException, NotificationNotFoundException, UnAuthorizedException;
 }

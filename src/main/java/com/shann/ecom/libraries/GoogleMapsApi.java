@@ -1,10 +1,7 @@
 package com.shann.ecom.libraries;
 
 import com.shann.ecom.libraries.models.GLocation;
-
 import java.util.Random;
-
-
 
 public class GoogleMapsApi {
 

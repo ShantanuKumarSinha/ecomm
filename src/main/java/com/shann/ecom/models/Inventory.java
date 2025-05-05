@@ -7,11 +7,12 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name= "ecom_inventory")
+@Table(name = "ecom_inventory")
 @Data
-public class Inventory extends BaseModel{
-    @OneToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
-    private int quantity;
+public class Inventory extends BaseModel {
+  @OneToOne
+  @JoinColumn(name = "product_id", referencedColumnName = "id")
+  private Product product;
+
+  private int quantity;
 }
