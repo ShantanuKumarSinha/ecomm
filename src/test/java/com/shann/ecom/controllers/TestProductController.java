@@ -85,7 +85,7 @@ public class TestProductController {
 
         User u1 = new User();
         u1.setName("Test User");
-        u1.setEmail("test@scaler.com");
+        u1.setEmail("test@shann.com");
         u1.setAddresses(List.of(userAddress));
         user = userRepository.save(u1);
 

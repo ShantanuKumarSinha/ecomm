@@ -48,12 +48,12 @@ public class TestControllers {
 
         User u1 = new User();
         u1.setName("Test User");
-        u1.setEmail("test@scaler.com");
+        u1.setEmail("test@shann.com");
         user = userRepository.save(u1);
 
         User u2 = new User();
         u2.setName("Test User 2");
-        u2.setEmail("test2@scaler.com");
+        u2.setEmail("test2@shann.com");
         user2 = userRepository.save(u2);
 
         Product product1 = new Product();

@@ -41,7 +41,7 @@ public class TestOrderController {
     public  void insertDummyData(){
         User u1 = new User();
         u1.setName("Test User");
-        u1.setEmail("test@scaler.com");
+        u1.setEmail("test@shann.com");
         user = userRepository.save(u1);
 
 
@@ -162,7 +162,7 @@ public class TestOrderController {
     public void testCancelOrder_OrderDoesntBelongToUser() {
         User user2 = new User();
         user2.setName("Test User 2");
-        user2.setEmail("test2@scaler.com");
+        user2.setEmail("test2@shann.com");
         user2 = userRepository.save(user2);
 
         CancelOrderRequestDto requestDto = new CancelOrderRequestDto();
