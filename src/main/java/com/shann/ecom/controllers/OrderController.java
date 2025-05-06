@@ -27,19 +27,19 @@ public class OrderController {
   @PostMapping("")
   public CancelOrderResponseDto cancelOrder(
       @RequestBody CancelOrderRequestDto cancelOrderRequestDto) {
-    var cancelOrderResopnseDto = new CancelOrderResponseDto();
+    var cancelOrderResponseDto = new CancelOrderResponseDto();
     try {
       var order =
           orderService.cancelOrder(
               cancelOrderRequestDto.getOrderId(), cancelOrderRequestDto.getUserId());
-      cancelOrderResopnseDto.setOrder(order);
-      cancelOrderResopnseDto.setStatus(ResponseStatus.SUCCESS);
+      cancelOrderResponseDto.setOrder(order);
+      cancelOrderResponseDto.setStatus(ResponseStatus.SUCCESS);
     } catch (UserNotFoundException
         | OrderNotFoundException
         | OrderDoesNotBelongToUserException
         | OrderCannotBeCancelledException e) {
-      cancelOrderResopnseDto.setStatus(ResponseStatus.FAILURE);
+      cancelOrderResponseDto.setStatus(ResponseStatus.FAILURE);
     }
-    return cancelOrderResopnseDto;
+    return cancelOrderResponseDto;
   }
 }
