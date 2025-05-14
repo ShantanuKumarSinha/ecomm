@@ -1,4 +1,4 @@
-package com.example.shortenurl.dtos;
+package com.shann.ecom.dtos;
 
 public enum ResponseStatus {
     SUCCESS,

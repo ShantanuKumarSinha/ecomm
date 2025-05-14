@@ -136,3 +136,9 @@ can cancel an order.
 - If all the above checks pass then we need to update the inventory with by adding the quantity of the order back to the
   inventory. And marking the order as cancelled.
 - We should handle for concurrent requests, i.e. we should update the inventory correctly.
+
+## H2 Console
+  http://127.0.0.1:8080/ecom/api/v1/h2-console
+
+## Swagger Documentation
+  http://127.0.0.1:8080/ecom/api/v1/swagger-ui/index.html
