@@ -3,6 +3,7 @@ package com.shann.ecom.controllers;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.shann.ecom.dtos.*;
+import com.shann.ecom.enums.NotificationStatus;
 import com.shann.ecom.models.*;
 import com.shann.ecom.repositories.InventoryRepository;
 import com.shann.ecom.repositories.NotificationRepository;

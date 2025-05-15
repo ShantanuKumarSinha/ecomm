@@ -6,7 +6,7 @@ import com.shann.ecom.exceptions.ProductNotFoundException;
 import com.shann.ecom.exceptions.UnAuthorizedException;
 import com.shann.ecom.exceptions.UserNotFoundException;
 import com.shann.ecom.models.Notification;
-import com.shann.ecom.models.NotificationStatus;
+import com.shann.ecom.enums.NotificationStatus;
 import com.shann.ecom.models.User;
 import com.shann.ecom.repositories.InventoryRepository;
 import com.shann.ecom.repositories.NotificationRepository;

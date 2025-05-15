@@ -1,4 +1,4 @@
-package com.shann.ecom.models;
+package com.shann.ecom.enums;
 
 public enum NotificationStatus {
   PENDING,

@@ -1,5 +1,6 @@
 package com.shann.ecom.models;
 
+import com.shann.ecom.enums.NotificationStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 

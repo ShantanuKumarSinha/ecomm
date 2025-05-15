@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import com.shann.ecom.dtos.CancelOrderRequestDto;
 import com.shann.ecom.dtos.CancelOrderResponseDto;
 import com.shann.ecom.dtos.ResponseStatus;
+import com.shann.ecom.enums.OrderStatus;
 import com.shann.ecom.models.*;
 import com.shann.ecom.repositories.*;
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class TestOrderController {
 
 
         Order order = new Order();
-        order.setUser(user);
+        order.setUserInOrder(user);
         order.setOrderStatus(OrderStatus.PLACED);
         order = orderRepository.save(order);
 
@@ -104,7 +105,7 @@ public class TestOrderController {
         List<Order> orders = orderRepository.findAll();
         for(Order order: orders){
             order.setOrderDetails(null);
-            order.setUser(null);
+            order.setUserInOrder(null);
             orderRepository.save(order);
         }
         orderDetailRepository.deleteAll();

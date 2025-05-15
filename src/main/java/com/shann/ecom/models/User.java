@@ -1,8 +1,8 @@
 package com.shann.ecom.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.shann.ecom.enums.UserType;
+import jakarta.persistence.*;
+
 import java.util.List;
 import lombok.Data;
 
@@ -12,9 +12,10 @@ import lombok.Data;
 public class User extends BaseModel{
     private String name;
     private String email;
-    @OneToMany
+    @OneToMany(mappedBy = "userInOrder", fetch = FetchType.LAZY)
     private List<Order> orders;
-    @OneToMany
+    @OneToMany(mappedBy = "userInAddress", fetch = FetchType.LAZY)
     private List<Address> addresses;
+    @Enumerated(EnumType.ORDINAL)
     private UserType userType;
 }
