@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.shann.ecom.dtos.*;
 import com.shann.ecom.models.Product;
 import com.shann.ecom.models.User;
-import com.shann.ecom.models.UserType;
+import com.shann.ecom.enums.UserType;
 import com.shann.ecom.repositories.InventoryRepository;
 import com.shann.ecom.repositories.ProductRepository;
 import com.shann.ecom.repositories.UserRepository;

@@ -1,12 +1,7 @@
 package com.shann.ecom.controllers;
 
-import com.shann.ecom.dtos.CancelOrderRequestDto;
-import com.shann.ecom.dtos.CancelOrderResponseDto;
-import com.shann.ecom.dtos.ResponseStatus;
-import com.shann.ecom.exceptions.OrderCannotBeCancelledException;
-import com.shann.ecom.exceptions.OrderDoesNotBelongToUserException;
-import com.shann.ecom.exceptions.OrderNotFoundException;
-import com.shann.ecom.exceptions.UserNotFoundException;
+import com.shann.ecom.dtos.*;
+import com.shann.ecom.exceptions.*;
 import com.shann.ecom.services.OrderService;
 import com.shann.ecom.services.impl.OrderServiceImpl;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +19,28 @@ public class OrderController {
     this.orderService = orderServiceImpl;
   }
 
-  @PostMapping("")
+  @PostMapping("/place")
+  public PlaceOrderResponseDto placeOrder(@RequestBody PlaceOrderRequestDto placeOrderRequestDto) {
+    var placeOrderResponseDto = new PlaceOrderResponseDto();
+    try {
+      var order =
+          orderService.placeOrder(
+              placeOrderRequestDto.getUserId(),
+              placeOrderRequestDto.getAddressId(),
+              placeOrderRequestDto.getOrderPairs());
+      placeOrderResponseDto.setOrder(order);
+      placeOrderResponseDto.setStatus(ResponseStatus.SUCCESS);
+    } catch (UserNotFoundException
+        | InvalidAddressException
+        | OutOfStockException
+        | InvalidProductException
+        | HighDemandProductException e) {
+      placeOrderResponseDto.setStatus(ResponseStatus.FAILURE);
+    }
+    return placeOrderResponseDto;
+  }
+
+  @PostMapping("/cancel")
   public CancelOrderResponseDto cancelOrder(
       @RequestBody CancelOrderRequestDto cancelOrderRequestDto) {
     var cancelOrderResponseDto = new CancelOrderResponseDto();

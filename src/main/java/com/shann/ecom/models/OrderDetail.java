@@ -7,7 +7,7 @@ import lombok.Data;
 @Table(name = "ecom_order_detail")
 @Data
 public class OrderDetail extends BaseModel {
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", referencedColumnName = "id")
   private Order order;
 

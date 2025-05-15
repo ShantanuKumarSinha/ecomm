@@ -1,9 +1,10 @@
 package com.shann.ecom.models;
 
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
+@Table(name = "ecom_address")
 @Data
 public class Address extends BaseModel {
   private String building;
@@ -16,4 +17,7 @@ public class Address extends BaseModel {
   private String zipCode;
   private double latitude;
   private double longitude;
+  @ManyToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User userInAddress;
 }
