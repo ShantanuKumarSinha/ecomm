@@ -103,7 +103,7 @@ public class OrderServiceImpl implements OrderService {
               .orElseThrow(() -> new OutOfStockException("Not Enough Stock for Product found"));
       // reduce the quantity of the product in inventory
       inventory.setQuantity(inventory.getQuantity() - orderPair.getSecond());
-      // update the inventory lis
+      // update the inventory list
       finalInventories.add(inventory);
       // check if product is high demand product
       var highDemandProductOptional = highDemandProductRepository.findById(orderPair.getFirst());
