@@ -24,7 +24,7 @@ public class Address extends BaseModel {
   @JsonBackReference
   private User user;
 
-  @OneToOne(mappedBy = "deliveryAddress")
+  @OneToOne(mappedBy = "deliveryAddress", cascade = CascadeType.REMOVE, orphanRemoval = true)
   @JsonBackReference
   private Order order;
 }
