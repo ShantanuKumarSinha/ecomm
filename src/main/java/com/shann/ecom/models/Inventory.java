@@ -7,7 +7,7 @@ import lombok.Data;
 @Table(name = "ecom_inventory")
 @Data
 public class Inventory extends BaseModel {
-  @OneToOne
+  @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "product_id", referencedColumnName = "id")
   private Product product;
 

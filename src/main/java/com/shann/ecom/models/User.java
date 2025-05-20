@@ -1,5 +1,6 @@
 package com.shann.ecom.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.shann.ecom.enums.UserType;
 import jakarta.persistence.*;
 
@@ -13,6 +14,7 @@ public class User extends BaseModel{
     private String name;
     private String email;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Order> orders;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Address> addresses;

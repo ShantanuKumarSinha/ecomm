@@ -116,12 +116,27 @@ public class OrderServiceImpl implements OrderService {
                   + highDemandProduct.getMaxQuantity());
       }
     }
-    // create order details
     var order = new Order();
     order.setUser(user);
     order.setOrderStatus(OrderStatus.PLACED);
-    order.setOrderDetails(orderDetails);
+    order.setDeliveryAddress(address);
     order = orderRepository.save(order);
+    // set the order in order details
+    int index =0;
+    var finalOrder = order;
+   for(var inventory : finalInventories){
+      var orderDetail = new OrderDetail();
+      orderDetail.setProduct(inventory.getProduct());
+      orderDetail.setQuantity(orderPairs.get(index++).getSecond());
+      orderDetail.setOrder(finalOrder);
+      orderDetails.add(orderDetail);
+    };
+    // save the order details
+    orderDetails = (ArrayList<OrderDetail>) orderDetailRepository.saveAll(orderDetails);
+
+    // set the order details in order
+    order.setOrderDetails(orderDetails);
+
     // save the inventories in inventory repository only if the order is placed
     inventoryRepository.saveAll(finalInventories);
     return order;
