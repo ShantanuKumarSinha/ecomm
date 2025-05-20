@@ -1,6 +1,5 @@
 package com.shann.ecom.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
