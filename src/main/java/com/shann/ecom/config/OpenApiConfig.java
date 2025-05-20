@@ -12,8 +12,8 @@ public class OpenApiConfig {
     public OpenAPI usersMicroserviceOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Your API Title")
-                        .description("Your API Description")
+                        .title("E-Commerce User Management API")
+                        .description("API for managing users in the e-commerce platform, including registration, authentication, and profile management.")
                         .version("1.0"));
     }
 }
