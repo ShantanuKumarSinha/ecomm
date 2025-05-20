@@ -11,11 +11,16 @@ import lombok.Data;
 public class Order extends BaseModel {
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id")
-  private User userInOrder;
+  private User user;
 
   @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
   private List<OrderDetail> orderDetails;
 
   @Enumerated(EnumType.ORDINAL)
   private OrderStatus orderStatus;
+
+  @OneToOne
+  @JoinColumn(name = "delivery_address_id", referencedColumnName = "id")
+  private Address  deliveryAddress;
+
 }

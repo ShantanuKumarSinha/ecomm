@@ -1,6 +1,6 @@
 package com.shann.ecom.services.impl;
 
-import com.shann.ecom.adapter.EmailAdapter;
+import com.shann.ecom.adapter.impl.EmailAdapter;
 import com.shann.ecom.adapter.MailAdapter;
 import com.shann.ecom.exceptions.ProductNotFoundException;
 import com.shann.ecom.exceptions.UnAuthorizedAccessException;

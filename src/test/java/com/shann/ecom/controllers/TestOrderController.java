@@ -3,9 +3,7 @@ package com.shann.ecom.controllers;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.shann.ecom.dtos.CancelOrderRequestDto;
-import com.shann.ecom.dtos.CancelOrderResponseDto;
-import com.shann.ecom.dtos.ResponseStatus;
+import com.shann.ecom.dtos.*;
 import com.shann.ecom.enums.OrderStatus;
 import com.shann.ecom.models.*;
 import com.shann.ecom.repositories.*;
@@ -16,8 +14,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.util.Pair;
+import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest
+@TestPropertySource("classpath:application-test.properties")
 public class TestOrderController {
 
     @Autowired
@@ -82,7 +83,7 @@ public class TestOrderController {
 
 
         Order order = new Order();
-        order.setUserInOrder(user);
+        order.setUser(user);
         order.setOrderStatus(OrderStatus.PLACED);
         order = orderRepository.save(order);
 
@@ -105,7 +106,7 @@ public class TestOrderController {
         List<Order> orders = orderRepository.findAll();
         for(Order order: orders){
             order.setOrderDetails(null);
-            order.setUserInOrder(null);
+            order.setUser(null);
             orderRepository.save(order);
         }
         orderDetailRepository.deleteAll();
@@ -113,6 +114,111 @@ public class TestOrderController {
         inventoryRepository.deleteAll();
         productRepository.deleteAll();
         userRepository.deleteAll();
+    }
+
+    @Test
+    public void placeOrder_Success(){
+        List<Inventory> beforeOrdering = inventoryRepository.findAllById(List.of(products.get(0).getId(), products.get(1).getId(), products.get(2).getId()));
+        List<Pair<Integer, Integer>> orderPairs = List.of(Pair.of(products.get(0).getId(), 1), Pair.of(products.get(1).getId(), 1),
+                Pair.of(products.get(2).getId(), 1));
+        PlaceOrderRequestDto placeOrderRequestDto = new PlaceOrderRequestDto();
+        placeOrderRequestDto.setUserId(user.getId());
+        placeOrderRequestDto.setAddressId(user.getAddresses().get(0).getId());
+        placeOrderRequestDto.setOrderPairs(orderPairs);
+
+        PlaceOrderResponseDto placeOrderResponseDto = orderController.placeOrder(placeOrderRequestDto);
+        assertEquals(ResponseStatus.SUCCESS, placeOrderResponseDto.getStatus(), "Status should be success");
+        assertEquals(OrderStatus.PLACED, placeOrderResponseDto.getOrder().getOrderStatus(), "Order status should be placed");
+        assertEquals(3, placeOrderResponseDto.getOrder().getOrderDetails().size(), "There should be 3 items in the order");
+
+        orderRepository.findById(placeOrderResponseDto.getOrder().getId()).ifPresent(order -> {
+            assertEquals(user.getId(), order.getUser().getId(), "User id should be same");
+            user.getAddresses().stream().filter(address -> address.getId() == order.getDeliveryAddress().getId()).findFirst().ifPresent(address -> {
+                assertEquals(address.getId(), order.getDeliveryAddress().getId(), "Address id should be same");
+            });
+        });
+
+        List<Inventory> afterOrdering = inventoryRepository.findAllById(List.of(products.get(0).getId(), products.get(1).getId(), products.get(2).getId()));
+        for(int i = 0; i < beforeOrdering.size(); i++){
+            assertEquals(beforeOrdering.get(i).getQuantity() - orderPairs.get(i).getSecond(), afterOrdering.get(i).getQuantity(), "Quantity should be updated");
+        }
+
+    }
+
+    @Test
+    public void placeOrder_IncorrectAddress_Failure(){
+        List<Pair<Integer, Integer>> orderPairs = List.of(Pair.of(products.get(0).getId(), 1), Pair.of(products.get(1).getId(), 1),
+                Pair.of(products.get(2).getId(), 1));
+        PlaceOrderRequestDto placeOrderRequestDto = new PlaceOrderRequestDto();
+        placeOrderRequestDto.setUserId(user.getId());
+        placeOrderRequestDto.setAddressId(user.getAddresses().get(0).getId() + 100);
+        placeOrderRequestDto.setOrderPairs(orderPairs);
+
+        PlaceOrderResponseDto placeOrderResponseDto = orderController.placeOrder(placeOrderRequestDto);
+        assertEquals(ResponseStatus.FAILURE, placeOrderResponseDto.getStatus(), "Status should be failure");
+        assertNull(placeOrderResponseDto.getOrder(), "Order should be null");
+
+    }
+
+    @Test
+    public void placeOrder_NonExistingUser_Failure(){
+        List<Pair<Integer, Integer>> orderDetails = List.of(Pair.of(products.get(0).getId(), 1), Pair.of(products.get(1).getId(), 1),
+                Pair.of(products.get(2).getId(), 1));
+        PlaceOrderRequestDto placeOrderRequestDto = new PlaceOrderRequestDto();
+        placeOrderRequestDto.setUserId(user.getId() + 1000);
+        placeOrderRequestDto.setAddressId(user.getAddresses().get(0).getId());
+        placeOrderRequestDto.setOrderPairs(orderDetails);
+
+        PlaceOrderResponseDto placeOrderResponseDto = orderController.placeOrder(placeOrderRequestDto);
+        assertEquals(ResponseStatus.FAILURE, placeOrderResponseDto.getStatus(), "Status should be failure");
+        assertNull(placeOrderResponseDto.getOrder(), "Order should be null");
+
+    }
+
+    @Test
+    public void placeOrder_NonExistingProduct_Failure(){
+        List<Pair<Integer, Integer>> orderDetails = List.of(Pair.of(products.get(0).getId(), 1), Pair.of(products.get(1).getId(), 1),
+                Pair.of(products.get(2).getId()+1000, 1));
+        PlaceOrderRequestDto placeOrderRequestDto = new PlaceOrderRequestDto();
+        placeOrderRequestDto.setUserId(user.getId());
+        placeOrderRequestDto.setAddressId(user.getAddresses().get(0).getId());
+        placeOrderRequestDto.setOrderPairs(orderDetails);
+
+        PlaceOrderResponseDto placeOrderResponseDto = orderController.placeOrder(placeOrderRequestDto);
+        assertEquals(ResponseStatus.FAILURE, placeOrderResponseDto.getStatus(), "Status should be failure");
+        assertNull(placeOrderResponseDto.getOrder(), "Order should be null");
+
+    }
+
+
+    @Test
+    public void placeOrder_OverPurchaseHighDemandProduct_Failure(){
+        List<Pair<Integer, Integer>> orderDetails = List.of(Pair.of(products.get(0).getId(), 1), Pair.of(products.get(1).getId(), 1),
+                Pair.of(products.get(2).getId(), 100));
+        PlaceOrderRequestDto placeOrderRequestDto = new PlaceOrderRequestDto();
+        placeOrderRequestDto.setUserId(user.getId());
+        placeOrderRequestDto.setAddressId(user.getAddresses().get(0).getId());
+        placeOrderRequestDto.setOrderPairs(orderDetails);
+
+        PlaceOrderResponseDto placeOrderResponseDto = orderController.placeOrder(placeOrderRequestDto);
+        assertEquals(ResponseStatus.FAILURE, placeOrderResponseDto.getStatus(), "Status should be failure");
+        assertNull(placeOrderResponseDto.getOrder(), "Order should be null");
+
+    }
+
+    @Test
+    public void placeOrder_OverPurchaseNonHighDemandProducts_Failure(){
+        List<Pair<Integer, Integer>> orderDetails = List.of(Pair.of(products.get(0).getId(), 20), Pair.of(products.get(1).getId(), 15),
+                Pair.of(products.get(2).getId(), 1));
+        PlaceOrderRequestDto placeOrderRequestDto = new PlaceOrderRequestDto();
+        placeOrderRequestDto.setUserId(user.getId());
+        placeOrderRequestDto.setAddressId(user.getAddresses().get(0).getId());
+        placeOrderRequestDto.setOrderPairs(orderDetails);
+
+        PlaceOrderResponseDto placeOrderResponseDto = orderController.placeOrder(placeOrderRequestDto);
+        assertEquals(ResponseStatus.FAILURE, placeOrderResponseDto.getStatus(), "Status should be failure");
+        assertNull(placeOrderResponseDto.getOrder(), "Order should be null");
+
     }
 
     @Test

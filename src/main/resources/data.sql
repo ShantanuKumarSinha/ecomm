@@ -1,6 +1,7 @@
 -- This SQL file is used to insert initial data into the database tables.
--- Create table for ecom_user
-
+-- ALTER TABLE ecom_inventory
+-- ADD CONSTRAINT FK_PRODUCT
+-- FOREIGN KEY (product_id) REFERENCES ecom_product(id) ON DELETE CASCADE;
 -- Insert statements for the ecom_user table
 INSERT INTO ecom_user (name, email, user_type) VALUES
 ('Shantanu Kumar', 'shan.raj93@gmail.com',0),
@@ -39,4 +40,3 @@ INSERT INTO ecom_order (user_id, order_status) VALUES
 INSERT INTO ecom_order_detail ( order_id, product_id, quantity) VALUES
 (1, 1, 1),
 (1, 2, 1);
-

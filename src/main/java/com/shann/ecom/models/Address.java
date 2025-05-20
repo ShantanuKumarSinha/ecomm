@@ -17,7 +17,11 @@ public class Address extends BaseModel {
   private String zipCode;
   private double latitude;
   private double longitude;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User userInAddress;
+  private User user;
+
+  @OneToOne(mappedBy = "deliveryAddress")
+  private Order order;
 }

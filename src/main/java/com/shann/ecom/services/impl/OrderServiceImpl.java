@@ -23,6 +23,7 @@ public class OrderServiceImpl implements OrderService {
   private InventoryRepository inventoryRepository;
   private ProductRepository productRepository;
   private AddressRepository addressRepository;
+  private HighDemandProductRepository highDemandProductRepository;
 
   public OrderServiceImpl(
       UserRepository userRepository,
@@ -30,7 +31,8 @@ public class OrderServiceImpl implements OrderService {
       OrderDetailRepository orderDetailRepository,
       InventoryRepository inventoryRepository,
       ProductRepository productRepository,
-      AddressRepository addressRepository) {
+      AddressRepository addressRepository,
+      HighDemandProductRepository highDemandProductRepository) {
 
     this.userRepository = userRepository;
     this.orderRepository = orderRepository;
@@ -38,6 +40,7 @@ public class OrderServiceImpl implements OrderService {
     this.inventoryRepository = inventoryRepository;
     this.productRepository = productRepository;
     this.addressRepository = addressRepository;
+    this.highDemandProductRepository = highDemandProductRepository;
   }
 
   @Override
@@ -55,36 +58,41 @@ public class OrderServiceImpl implements OrderService {
         addressRepository
             .findById(addressId)
             .orElseThrow(() -> new InvalidAddressException("Address not found"));
-    if(address.getUserInAddress().getId() != userId)
+    if (address.getUser().getId() != userId)
       throw new InvalidAddressException("Address doesn't belong to this user");
-//    if (!user.getAddresses().contains(address) )
-//      throw new InvalidAddressException("Address doesn't belong to this user");
+    //    if (!user.getAddresses().contains(address) )
+    //      throw new InvalidAddressException("Address doesn't belong to this user");
     var inventories = new ArrayList<Inventory>();
     var orderDetails = new ArrayList<OrderDetail>();
+    var productIds = new ArrayList<Integer>();
     for (var orderPair : orderPairs) {
       var product =
           productRepository
               .findById(orderPair.getFirst())
               .orElseThrow(() -> new InvalidProductException("Product not found"));
-      var inventory =
-          inventoryRepository
-              .findByProduct(product)
-              .orElseThrow(() -> new OutOfStockException("Inventory out of stock"));
-      if (inventory.getQuantity() < orderPair.getSecond())
-        throw new OutOfStockException("Inventory out of stock");
-      inventory.setQuantity(inventory.getQuantity() - orderPair.getSecond());
-      inventories.add(inventory);
-      // create order detail
-      var orderDetail = new OrderDetail();
-      orderDetail.setProduct(product);
-      orderDetail.setQuantity(orderPair.getSecond());
-      // add order detail to order details list
-      orderDetails.add(orderDetail);
+      productIds.add(product.getId());
+    }
+    inventories = (ArrayList<Inventory>) inventoryRepository.findAllByProductIdIn(productIds);
+    if (inventories.size() != productIds.size()) throw new OutOfStockException("Product not found");
 
+    for (var orderPair : orderPairs) {
+      var inventory =
+          inventories.stream()
+              .filter(inv -> inv.getQuantity() >= orderPair.getSecond())
+              .findFirst()
+              .orElseThrow(() -> new OutOfStockException("Not Enough Product in Stock"));
+      var highDemandProductOptional = highDemandProductRepository.findById(orderPair.getFirst());
+      if (highDemandProductOptional.isPresent()) {
+        var highDemandProduct = highDemandProductOptional.get();
+        if (orderPair.getSecond() > highDemandProduct.getMaxQuantity())
+          throw new HighDemandProductException(
+              "High demand product can't be ordered more than "
+                  + highDemandProduct.getMaxQuantity());
+      }
     }
     inventoryRepository.saveAll(inventories);
     var order = new Order();
-    order.setUserInOrder(user);
+    order.setUser(user);
     order.setOrderStatus(OrderStatus.PLACED);
     order.setOrderDetails(orderDetails);
     return orderRepository.save(order);
@@ -105,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
         orderRepository
             .findById(orderId)
             .orElseThrow(() -> new OrderNotFoundException("Order doesn't exist"));
-    if (!order.getUserInOrder().equals(user))
+    if (!order.getUser().equals(user))
       throw new OrderDoesNotBelongToUserException("Order doesn't belong to this user");
     if (List.of(OrderStatus.CANCELLED, OrderStatus.SHIPPED, OrderStatus.DELIVERED)
         .contains(order.getOrderStatus()))
