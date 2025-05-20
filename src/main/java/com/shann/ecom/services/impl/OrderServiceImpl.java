@@ -43,7 +43,20 @@ public class OrderServiceImpl implements OrderService {
     this.highDemandProductRepository = highDemandProductRepository;
   }
 
+  /**
+   * @param userId
+   * @param addressId
+   * @param orderPairs
+   * @return Order
+   * @throws UserNotFoundException
+   * @throws InvalidAddressException
+   * @throws OutOfStockException
+   * @throws InvalidProductException
+   * @throws HighDemandProductException
+   */
+
   @Override
+  @Transactional(isolation = Isolation.SERIALIZABLE)
   public Order placeOrder(int userId, int addressId, List<Pair<Integer, Integer>> orderPairs)
       throws UserNotFoundException,
           InvalidAddressException,
@@ -62,9 +75,9 @@ public class OrderServiceImpl implements OrderService {
       throw new InvalidAddressException("Address doesn't belong to this user");
     //    if (!user.getAddresses().contains(address) )
     //      throw new InvalidAddressException("Address doesn't belong to this user");
-    var inventories = new ArrayList<Inventory>();
     var orderDetails = new ArrayList<OrderDetail>();
     var productIds = new ArrayList<Integer>();
+    //check if product exist
     for (var orderPair : orderPairs) {
       var product =
           productRepository
@@ -72,32 +85,57 @@ public class OrderServiceImpl implements OrderService {
               .orElseThrow(() -> new InvalidProductException("Product not found"));
       productIds.add(product.getId());
     }
-    inventories = (ArrayList<Inventory>) inventoryRepository.findAllByProductIdIn(productIds);
+    // find all the inventories for the given productIds;
+    var inventories = inventoryRepository.findAllByProductIdIn(productIds);
+    List<Inventory> finalInventories = new ArrayList<>();
+    // if inventories size is not equal to productIds size, then product is not found
     if (inventories.size() != productIds.size()) throw new OutOfStockException("Product not found");
 
     for (var orderPair : orderPairs) {
+      // check if product is in stock
       var inventory =
           inventories.stream()
-              .filter(inv -> inv.getQuantity() >= orderPair.getSecond())
+              .filter(
+                  inv ->
+                      (inv.getProduct().getId() == orderPair.getFirst())
+                          && (inv.getQuantity() >= orderPair.getSecond()))
               .findFirst()
-              .orElseThrow(() -> new OutOfStockException("Not Enough Product in Stock"));
+              .orElseThrow(() -> new OutOfStockException("Not Enough Stock for Product found"));
+      // reduce the quantity of the product in inventory
+      inventory.setQuantity(inventory.getQuantity() - orderPair.getSecond());
+      // update the inventory lis
+      finalInventories.add(inventory);
+      // check if product is high demand product
       var highDemandProductOptional = highDemandProductRepository.findById(orderPair.getFirst());
       if (highDemandProductOptional.isPresent()) {
         var highDemandProduct = highDemandProductOptional.get();
+        // check if the quantity is more than the max quantity
         if (orderPair.getSecond() > highDemandProduct.getMaxQuantity())
           throw new HighDemandProductException(
               "High demand product can't be ordered more than "
                   + highDemandProduct.getMaxQuantity());
       }
     }
-    inventoryRepository.saveAll(inventories);
+    // create order details
     var order = new Order();
     order.setUser(user);
     order.setOrderStatus(OrderStatus.PLACED);
     order.setOrderDetails(orderDetails);
-    return orderRepository.save(order);
+    order = orderRepository.save(order);
+    // save the inventories in inventory repository only if the order is placed
+    inventoryRepository.saveAll(finalInventories);
+    return order;
   }
 
+    /**
+     * @param orderId
+     * @param userId
+     * @return Order
+     * @throws UserNotFoundException
+     * @throws OrderNotFoundException
+     * @throws OrderDoesNotBelongToUserException
+     * @throws OrderCannotBeCancelledException
+     */
   @Override
   @Transactional(isolation = Isolation.SERIALIZABLE)
   public Order cancelOrder(int orderId, int userId)
