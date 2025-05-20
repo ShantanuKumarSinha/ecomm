@@ -17,6 +17,7 @@ public class User extends BaseModel{
     @JsonManagedReference
     private List<Order> orders;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Address> addresses;
     @Enumerated(EnumType.ORDINAL)
     private UserType userType;

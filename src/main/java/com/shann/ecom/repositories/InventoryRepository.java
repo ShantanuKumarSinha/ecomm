@@ -18,8 +18,8 @@ public interface InventoryRepository extends JpaRepository<Inventory, Integer> {
 
   public Optional<Inventory> findByProductId(Integer productId);
 
-  @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "500")})
   @Lock(value = LockModeType.PESSIMISTIC_WRITE)
+  @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "500")})
   List<Inventory> findAllByProductIdIn(List<Integer> ids);
 
   @EntityGraph(attributePaths = "product")
