@@ -1,5 +1,4 @@
 -- This SQL file is used to insert initial data into the database tables.
--- ALTER TABLE
 ALTER TABLE ecom_address
 DROP CONSTRAINT FKG0DE3E6FIOYFH38D9X2T0L2PC;
 
