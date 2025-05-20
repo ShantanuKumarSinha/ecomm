@@ -1,5 +1,6 @@
 package com.shann.ecom.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +18,13 @@ public class Address extends BaseModel {
   private String zipCode;
   private double latitude;
   private double longitude;
+
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User userInAddress;
+  @JsonBackReference
+  private User user;
+
+  @OneToOne(mappedBy = "deliveryAddress", cascade = CascadeType.REMOVE, orphanRemoval = true)
+  @JsonBackReference
+  private Order order;
 }

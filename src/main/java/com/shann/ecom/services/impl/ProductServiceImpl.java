@@ -1,6 +1,5 @@
 package com.shann.ecom.services.impl;
 
-import com.shann.ecom.adapter.GoogleMapsAdapters;
 import com.shann.ecom.adapter.MapsAdapters;
 import com.shann.ecom.exceptions.AddressNotFoundException;
 import com.shann.ecom.exceptions.ProductNotFoundException;
@@ -20,11 +19,11 @@ public class ProductServiceImpl implements ProductService {
   private DeliveryHubRepository deliveryHubRepository;
 
   public ProductServiceImpl(
-      GoogleMapsAdapters googleMapsAdapters,
+      MapsAdapters mapsAdapters,
       ProductRepository productRepository,
       AddressRepository addressRepository,
       DeliveryHubRepository deliveryHubRepository) {
-    this.mapsAdapters = googleMapsAdapters;
+    this.mapsAdapters = mapsAdapters;
     this.productRepository = productRepository;
     this.addressRepository = addressRepository;
     this.deliveryHubRepository = deliveryHubRepository;

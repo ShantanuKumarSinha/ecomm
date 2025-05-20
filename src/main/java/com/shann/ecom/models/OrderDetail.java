@@ -1,5 +1,6 @@
 package com.shann.ecom.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,9 +10,10 @@ import lombok.Data;
 public class OrderDetail extends BaseModel {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", referencedColumnName = "id")
+  @JsonBackReference
   private Order order;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "product_id", referencedColumnName = "id")
   private Product product;
 

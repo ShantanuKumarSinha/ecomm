@@ -1,6 +1,24 @@
 -- This SQL file is used to insert initial data into the database tables.
--- Create table for ecom_user
+ALTER TABLE ecom_address
+DROP CONSTRAINT FKG0DE3E6FIOYFH38D9X2T0L2PC;
 
+ALTER TABLE ecom_address
+ADD CONSTRAINT FKG0DE3E6FIOYFH38D9X2T0L2PC
+FOREIGN KEY (user_id) REFERENCES ecom_user(id) ON DELETE CASCADE;
+
+ALTER TABLE ecom_delivery_hub
+DROP CONSTRAINT FKSJXCOEFV6DA11KP7VWBF512A6;
+
+ALTER TABLE ecom_delivery_hub
+ADD CONSTRAINT FKSJXCOEFV6DA11KP7VWBF512A6
+FOREIGN KEY(address_id) REFERENCES ecom_address(id) ON DELETE CASCADE;
+
+ALTER TABLE ecom_seller
+DROP CONSTRAINT FK2YG5X9ETQ5Y6M2HE99JQUPCPG;
+
+ALTER TABLE ecom_seller
+ADD CONSTRAINT FK2YG5X9ETQ5Y6M2HE99JQUPCPG
+FOREIGN KEY(address_id) REFERENCES ecom_address(id) ON DELETE CASCADE;
 -- Insert statements for the ecom_user table
 INSERT INTO ecom_user (name, email, user_type) VALUES
 ('Shantanu Kumar', 'shan.raj93@gmail.com',0),
@@ -39,4 +57,3 @@ INSERT INTO ecom_order (user_id, order_status) VALUES
 INSERT INTO ecom_order_detail ( order_id, product_id, quantity) VALUES
 (1, 1, 1),
 (1, 2, 1);
-

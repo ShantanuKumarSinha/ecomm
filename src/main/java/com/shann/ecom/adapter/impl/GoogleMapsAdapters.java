@@ -1,5 +1,6 @@
-package com.shann.ecom.adapter;
+package com.shann.ecom.adapter.impl;
 
+import com.shann.ecom.adapter.MapsAdapters;
 import com.shann.ecom.libraries.GoogleMapsApi;
 import com.shann.ecom.libraries.models.GLocation;
 import org.springframework.stereotype.Component;
