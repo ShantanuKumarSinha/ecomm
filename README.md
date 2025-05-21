@@ -139,7 +139,7 @@ can cancel an order.
 
 # Implement place order functionality for an e-commerce platform
 ## Problem Statement
-  You are building an e-commerce platform. As a part of this system, you need to expose a functionality using which users can place an order for products.
+You are building an e-commerce platform. As a part of this system, you need to expose a functionality using which users can place an order for products.
 
 ### Requirements
 #### The request to place an order will contain the following information:
@@ -164,8 +164,29 @@ can cancel an order.
 * Implement the necessary exceptions in the exceptions package.
 * Do not modify the OrderService interface's placeOrder method signature. You can add additional methods to the interface if you want.
 
+# Implement functionality to show ads on an ecommerce platform
+## Problem Statement
+You are building an e-commerce platform. As a part of this system, you need to build a functionality using which users can be shown ads on the platform.
+
+### Requirements
+- Our in house data science team has figure out preferences of existing users using their past orders. Now using this information we can show them relevant ads on the platform and increase the chances of them buying the product.
+- They have stored the preferences of the users in a preferences table.
+- We want to build a functionality which will be called when user logs in to the platform. This functionality will fetch the preferences of the user and show them relevant ads.
+- Advertisements created on the platform will be stored in advertisements table. Each add will be having a relevant category.
+- Eg. A user might have preferences for things like [furniture, electronics, fashion]. So we will show them ads like 'iPhone 15', 'Levis Jeans', 'Wakefit Mattress' etc.
+- There can be certain users whose preference data might not be populated yet. For such users we can any ad from the platform.
+### Instructions
+- Carefully look at the dto package. These classes represent the request and response of the functionality which we want to implement.
+- Carefully examine the models package to understand the database schema.
+- Implement the getAdvertisementForUser method inside the AdsController.
+- Implement the AdsService interface and fix the repository interfaces.
+- You might need to add annotations like @Service, @Autowired, @Entity etc. to make the solution work. You might also need to handle cardinality between the models.
+- We will be using H2 database which is an in-memory SQL database. You do not need to implement any database related code. You just need to use the repository interfaces to interact with the database.
+- Implement the necessary exceptions in the exceptions package.
+- Do not modify the AdsService interface's placeOrder method signature. You can add additional methods to the interface if you want.
+
 ## H2 Console
-  http://127.0.0.1:8080/ecom/api/v1/h2-console
+http://127.0.0.1:8080/ecom/api/v1/h2-console
 
 ## Swagger Documentation
-  http://127.0.0.1:8080/ecom/api/v1/swagger-ui/index.html
+http://127.0.0.1:8080/ecom/api/v1/swagger-ui/index.html

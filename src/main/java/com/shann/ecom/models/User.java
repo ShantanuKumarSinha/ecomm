@@ -21,4 +21,6 @@ public class User extends BaseModel{
     private List<Address> addresses;
     @Enumerated(EnumType.ORDINAL)
     private UserType userType;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Preference> preferences;
 }
