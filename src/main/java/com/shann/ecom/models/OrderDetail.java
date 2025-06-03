@@ -13,7 +13,7 @@ public class OrderDetail extends BaseModel {
   @JsonBackReference
   private Order order;
 
-  @ManyToOne( cascade = CascadeType.REMOVE)
+  @ManyToOne
   @JoinColumn(name = "product_id", referencedColumnName = "id")
   private Product product;
 
