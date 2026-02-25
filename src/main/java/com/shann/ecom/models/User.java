@@ -23,4 +23,6 @@ public class User extends BaseModel{
     private UserType userType;
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Preference> preferences;
+    private String password;
+    private String phone;
 }
