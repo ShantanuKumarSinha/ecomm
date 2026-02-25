@@ -42,9 +42,9 @@ ADD CONSTRAINT FK7CITN3JF9VOCWUO76HI2OFPKK
 FOREIGN KEY(product_id) REFERENCES ecom_product(id) ON DELETE CASCADE;
 
 -- Insert statements for the ecom_user table
-INSERT INTO ecom_user (name, email, user_type) VALUES
-('Shantanu Kumar', 'shan.raj93@gmail.com',0),
-('Adorable Pirate', 'addorable.pirate@gmail.com',1);
+INSERT INTO ecom_user (name, email, user_type,password,phone) VALUES
+('Shantanu Kumar', 'shan.raj93@gmail.com',0,'$2a$12$e7jl9GCZlCK8cAxj2nn1zO4BCCQvHEW9DmC9cQT3f/4OjVpvekzge','9832485878'),
+('Adorable Pirate', 'addorable.pirate@gmail.com',1,'$2a$12$Rg4l0FtQGhNWyYm/wmNxPuAC/ElTDiV/PT0uxE6JxF4sDZMOb6MPq','7975006250');
 
 -- Insert statements for the address table
 INSERT INTO ecom_address (floor, building, street, city, state, zip_code, country, latitude, longitude, user_id) VALUES
